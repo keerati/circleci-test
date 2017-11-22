@@ -4,8 +4,15 @@ jobs:
     machine: true
     working_directory: ~/myapp
     steps:
-      - run: echo $CIRCLE_COMPARE_URL
-      - run: curl -s 'http://ea0f0af9.ngrok.io/API/DeveloperTools/integrationtest/runtest.cfm?testtype=devtools&reporter=simple&env=local' curlResults.html
+      - checkout
+      - run: sudo apt-get install jq 
+      - run: export $GITHUB_API_COMPARE_URL=${CIRCLE_COMPARE_URL/github\.com/api\.github\.com\/repos}
+      - run: export $TEST_URL='http://6639e731.ngrok.io/API/DeveloperTools/integrationtest/runtest.cfm?testtype=devtools&reporter=simple&env=local'
+      - run: 
+        - > 
+            if [ curl -s $GITHUB_API_COMPARE_URL | jq '.files[].filename' | grep 'a\.txt' > 'tmp/test-result.txt' ]; then 
+                curl -s $TEST_URL | tee curlResults.html; 
+            fi
           
       - store_artifacts:
           path: curlResults.html
