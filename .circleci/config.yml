@@ -7,9 +7,10 @@ jobs:
       - checkout
       - run: |
           sudo apt-get -y -qq update
-          sudo apt-get install jq 
+          sudo apt-get -y -qq install jq 
       - run: | 
-          if [ curl -s "${CIRCLE_COMPARE_URL/github\.com/api\.github\.com\/repos}" | jq '.files[].filename' | grep 'a\.txt' > 'tmp/test-result.txt' ]; then 
+          if curl -s "${CIRCLE_COMPARE_URL/github\.com/api\.github\.com\/repos}" | jq '.files[].filename' | grep 'a\.txt' > 'test-result.txt'; then 
+            echo "executing integration test!";
             curl -s "http://6639e731.ngrok.io/API/DeveloperTools/integrationtest/runtest.cfm?testtype=devtools&reporter=simple&env=local" | tee curlResults.html; 
           fi
           
