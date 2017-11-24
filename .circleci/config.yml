@@ -11,7 +11,7 @@ jobs:
       - run: | 
           if curl -s "${CIRCLE_COMPARE_URL/github\.com/api\.github\.com\/repos}" | jq '.files[].filename' | grep 'a\.txt' > 'test-result.txt'; then 
             echo "executing integration test!";
-            curl -s "http://6639e731.ngrok.io/API/DeveloperTools/integrationtest/runtest.cfm?testtype=devtools&reporter=simple&env=local" | tee curlResults.html; 
+            curl -s "http://6639e731.ngrok.io/API/DeveloperTools/integrationtest/runtest.cfm?testtype=xmlrpc&reporter=simple&branch=master&project=voucherengine&path=/voucherengine" | tee curlResults.html; 
           fi
           
       - store_artifacts:
